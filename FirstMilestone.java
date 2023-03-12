@@ -11,6 +11,7 @@ class Train{
     String Final_Station;
     String Distance;
     HashMap<String,Integer>seats;
+    // this hashmap is to store coaches and seat_left on a particular day
     HashMap<String,HashMap<String,Integer>> date_seat_left = new HashMap<>();
 }
 
