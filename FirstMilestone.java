@@ -30,7 +30,7 @@ class Ticket{
 public class TrainManagementSystem {
 
 
-    final static int TICKET_NUMBER =100000000;
+    static int TICKET_NUMBER =100000000;
 
     // to store information about all trains
     public static List<Train>alltrains = new ArrayList<>();
@@ -77,6 +77,7 @@ public class TrainManagementSystem {
             if (key.contains(coach_class)){
                 if (tickets_to_book<=mapElement.getValue()){
                     Ticket ticket = new Ticket(TICKET_NUMBER+1,getfare(coach_class,tickets_to_book, Integer.parseInt(train.Distance)),datetobook);
+                    TICKET_NUMBER++;
                     // add ticket to List of ticket
                     all_tickets.add(ticket);
                     // updating the seats now available in a cabin
@@ -168,7 +169,7 @@ public class TrainManagementSystem {
 //            System.out.println(train.seats);
 //        }
 
-        
+
 }
 
 }
