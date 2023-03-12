@@ -129,7 +129,7 @@ public class TrainManagementSystem {
 
         }
 
-        return "";
+        return "No Seats Available";
     }
 
     // this is to convert class given in ticket to class present in train class
