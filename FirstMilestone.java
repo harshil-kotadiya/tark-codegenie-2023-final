@@ -6,11 +6,12 @@ import java.util.*;
 
 // Trains call to store train information
 class Train{
-String Train_Number;
-String Intial_Station;
-String Final_Station;
-String Distance;
-HashMap<String,Integer>seats;
+    String Train_Number;
+    String Intial_Station;
+    String Final_Station;
+    String Distance;
+    HashMap<String,Integer>seats;
+    HashMap<String,HashMap<String,Integer>> date_seat_left = new HashMap<>();
 }
 
 
@@ -67,10 +68,37 @@ public class TrainManagementSystem {
 
     //to check if seats are available to book
     static String CheckIfSeatsAreAvailable(Train train,String[]ticket_to_book){
-         String s = "";
-         String coach_class  = convert_to_class(ticket_to_book[3]);
-         int tickets_to_book = Integer.parseInt(ticket_to_book[4]);
-         String datetobook = ticket_to_book[2];
+        String s = "";
+        String coach_class  = convert_to_class(ticket_to_book[3]);
+        int tickets_to_book = Integer.parseInt(ticket_to_book[4]);
+        String datetobook = ticket_to_book[2];
+
+
+
+        // if the train has been booked before
+        if (train.date_seat_left.containsKey(datetobook)){
+            for (Map.Entry<String,Integer> mapElement : train.date_seat_left.get(datetobook).entrySet()) {
+                String key = mapElement.getKey();
+                if (key.contains(coach_class)){
+                    if (tickets_to_book<=mapElement.getValue()){
+                        Ticket ticket = new Ticket(TICKET_NUMBER+1,getfare(coach_class,tickets_to_book, Integer.parseInt(train.Distance)),datetobook);
+                        TICKET_NUMBER++;
+                        // add ticket to List of ticket
+                        all_tickets.add(ticket);
+                        // updating the seats now available in a cabin
+                        mapElement.setValue(mapElement.getValue()-tickets_to_book);
+
+                        s=ticket.Ticket_number+" "+ticket.fare;
+                        return s;
+                    }
+                    else{
+                        return "No Seats Available";
+                    }
+                }
+
+            }
+        }
+
 
         for (Map.Entry<String,Integer> mapElement : train.seats.entrySet()) {
             String key = mapElement.getKey();
@@ -81,7 +109,14 @@ public class TrainManagementSystem {
                     // add ticket to List of ticket
                     all_tickets.add(ticket);
                     // updating the seats now available in a cabin
-                    mapElement.setValue(mapElement.getValue()-tickets_to_book);
+//                    mapElement.setValue(mapElement.getValue()-tickets_to_book);
+
+                    HashMap<String ,Integer>updated_seats = new HashMap<>();
+                    updated_seats.putAll(train.seats);
+
+                    updated_seats.put(key,mapElement.getValue()-tickets_to_book);
+                    train.date_seat_left.put(datetobook,updated_seats);
+
 
                     s=ticket.Ticket_number+" "+ticket.fare;
                     return s;
@@ -93,7 +128,7 @@ public class TrainManagementSystem {
 
         }
 
-         return "";
+        return "";
     }
 
     // this is to convert class given in ticket to class present in train class
@@ -170,6 +205,6 @@ public class TrainManagementSystem {
 //        }
 
 
-}
+    }
 
 }
